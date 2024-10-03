@@ -16,8 +16,6 @@ go run ./main.go --help
 go run ./main.go --scan-rules xls,xlsx,doc,docx,pdf --scan-level 15
 ```
 
-When Admin USB is detected, the temporary folder will automatically open.
-
 ## Parameters
 
 |Parameter|Required|Default|Description|

