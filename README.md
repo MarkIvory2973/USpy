@@ -4,22 +4,18 @@ Steal files from usb disks.
 
 ## Installation
 
-Install dependencies:
-
-```bash
-cd uspy/src
-go mod tidy
-```
-
 ```bash
 git clone https://github.com/MarkIvory2973/uspy.git
+cd uspy
 ```
 
 ## Usage
 
 ```bash
-go run ./main.go --help
-go run ./main.go --scan-rules xls,xlsx,doc,docx,pdf --scan-level 15
+make test
+make
+./uspy_amd64.exe --help
+./uspy_amd64.exe --scan-rules xls,xlsx,doc,docx,pdf --scan-level 15
 ```
 
 ## Parameters
